@@ -1,28 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Expériences</title>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Experience</title>
     <style>
-      body {
-        background-color: #e9ebee;
-        font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
-        font-size: 16px;
-        margin: 0 auto;
-        max-width: 800px;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .experience {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+        }
+
+        .experience h3 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .form-field {
+            margin-bottom: 10px;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-field textarea {
+            resize: vertical; /* Allow vertical resizing only */
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Expériences</h1>
-- Conception d'une boite à outils pour l'audit des environnements Wifi à l'aide de l'API PyrCrack.
-    <p>blabla</p>
-    Outils utilisés :
-    <ul>
-      <li>VWare Workstation</li>
-      <li>Kali Linux</li>
-    </ul>
-  </body>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Work Experience</h1>
+
+        <div class="experience">
+            <h3>My Experiences</h3>
+            <div class="form-field">
+                <label for="job-title">Final Project:
+                  </label>
+                <li>Conception d'une boite à outils pour l'audit des environnements Wifi à la base de l'API PyrCrack</li>
+            </div>
+            <div class="form-field">
+                <label for="company-name">
+                  SEKERA, CASABLANCA (2023 - 2024)</label>
+                
+            </div>
+            
+            <div class="form-field">
+                <label for="responsibilities">
+                  
+                <li> Development of a toolkit for auditing Wi-Fi networks.</li>
+                <li>Utilization of the PyrCrack API to automate security tests.</li>
+                  <li>Packet capture and analysis of vulnerabilities in wireless networks.</li></label>
+                
+            </div>
+            <div class="form-field">
+              <label for="job-title">INTERNSHIP :
+                </label>
+                Mise en oeuvre d'une solution SOAR at SEKERA, Casablanca (2022 - 2023)
+                
+                <li>Development of automation workflows.</li>
+                <li>Implementation of a SOAR solution.</li>
+                <li>Improvement of security incident management.</li>
+              
+          </div>
+          
+          
+          
+          
+        </div>
+
+        <div id="experience-list">
+            <!-- Added experiences will appear here -->
+        </div>
+    </div>
+
+    <script>
+        function addExperience() {
+            const jobTitle = document.getElementById('job-title').value;
+            const companyName = document.getElementById('company-name').value;
+            const duration = document.getElementById('duration').value;
+            const responsibilities = document.getElementById('responsibilities').value;
+
+            if (jobTitle && companyName && duration && responsibilities) {
+                const experienceList = document.getElementById('experience-list');
+                const experienceDiv = document.createElement('div');
+                experienceDiv.classList.add('experience');
+                experienceDiv.innerHTML = `
+                    <h3>${jobTitle}</h3>
+                    <p><strong>Company:</strong> ${companyName}</p>
+                    <p><strong>Duration:</strong> ${duration}</p>
+                    <p><strong>Responsibilities:</strong> ${responsibilities}</p>
+                `;
+                experienceList.appendChild(experienceDiv);
+
+                // Clear input fields after adding experience
+                document.getElementById('job-title').value = '';
+                document.getElementById('company-name').value = '';
+                document.getElementById('duration').value = '';
+                document.getElementById('responsibilities').value = '';
+            } else {
+                alert("Please fill in all fields");
+            }
+        }
+    </script>
+</body>
+
 </html>
