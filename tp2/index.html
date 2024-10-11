@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>TP2</title>
+  <title>Formulaire TP2</title>
   <meta name="description" content="" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -19,22 +19,67 @@
       font-size: 16px;
       margin: 0 auto;
       max-width: 800px;
+      padding: 20px;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    input, textarea, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
     }
   </style>
 
-  <!-- Code à dé-commenter si besoin de fichier CSS ou JS -->
-  <!--<link rel="stylesheet" href="style.css">-->
-  <!--<script src="js/main.js"></script>-->
 </head>
 
 <body>
   <nav>
-    <a href="..">🏠 Index</a> / TP2
+    <a href="..">🏠 Index</a> / Formulaire TP2
   </nav>
-  <h1>tp2</h1>
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
-  <img src="../galilee.png" alt="Logo Galilee" />
+
+  <h1>Formulaire de Contact</h1>
+
+  <!-- Formulaire à remplir -->
+  <form action="submit_form.php" method="post">
+    <label for="name">Nom :</label>
+    <input type="text" id="name" name="name" required placeholder="Votre nom">
+
+    <label for="email">Email :</label>
+    <input type="email" id="email" name="email" required placeholder="Votre email">
+
+    <label for="subject">Sujet :</label>
+    <input type="text" id="subject" name="subject" required placeholder="Sujet du message">
+
+    <label for="message">Message :</label>
+    <textarea id="message" name="message" rows="5" required placeholder="Votre message"></textarea>
+
+    <button type="submit">Envoyer</button>
+  </form>
+  
 </body>
 
 </html>
