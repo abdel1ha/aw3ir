@@ -1,39 +1,289 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>TP4</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
-
-    <style>
-        body {
-            background-color: #e9ebee;
-            font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
-            font-size: 16px;
-            margin: 0 auto;
-            max-width: 800px;
-        }
-    </style>
-
-    <!-- Code à dé-commenter si besoin de fichier CSS ou JS -->
-    <!--<link rel="stylesheet" href="style.css">-->
-    <!--<script src="main.js"></script>-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaire de Contact avec Géolocalisation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #map {
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .delete-btn {
+      background-color: #FF4136;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+    }
+    .delete-btn:hover {
+      background-color: #e33d30;
+    }
+  </style>
 </head>
 
 <body>
-    <nav>
-        <a href="..">🏠 Index</a> / TP4
-    </nav>
-    <h1>TP4</h1>
-    <!-- Add your site or application content here -->
-    <p>Hello world! This is HTML5 Boilerplate.</p>
-    <img src="../galilee.png" alt="Logo Galilee" />
+  <div class="container">
+    <h2>Ajouter un contact</h2>
+    <form id="contactForm" onsubmit="return handleFormSubmit(event)">
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <div class="form-group">
+        <label for="dateNaissance">Date de naissance</label>
+        <input type="date" id="dateNaissance" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <div class="form-group">
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+        <button type="button" onclick="getLocation()">GPS</button>
+      </div>
+      <div id="map">
+        <!-- La carte Google Maps apparaîtra ici -->
+      </div>
+      <div class="form-group">
+        <label for="email">Mail</label>
+        <input type="email" id="email" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <button type="submit">Ajouter</button>
+    </form>
+
+    <h3>Liste des contacts</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Date de naissance</th>
+          <th>Adresse</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Les contacts seront insérés ici -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="js/store.js"></script>
+  <script src="js/form-validation.js"></script>
+  <script src="js/gps.js"></script>
+  <script>
+    // Fonction pour calculer le nombre de caractères
+    function calcNbChar(id) {
+      const length = document.getElementById(id).value.length;
+      document.querySelector(`#${id} + .char-counter`).textContent = `${length} car.`;
+    }
+
+    // Gestion de la soumission du formulaire
+    function handleFormSubmit(event) {
+      event.preventDefault(); // Empêcher la soumission normale du formulaire
+
+      // Récupérer les valeurs des champs
+      const name = document.getElementById('nom').value;
+      const firstname = document.getElementById('prenom').value;
+      const date = document.getElementById('dateNaissance').value;
+      const adress = document.getElementById('adresse').value;
+      const mail = document.getElementById('email').value;
+
+      // Ajouter le contact à la liste et le stocker dans le localStorage
+      contactStore.add(name, firstname, date, adress, mail);
+
+      // Mettre à jour l'affichage de la liste
+      displayContactList();
+
+      alert('Contact ajouté avec succès !');
+    }
+
+    // Fonction pour afficher la liste des contacts
+    function displayContactList() {
+      const contactListString = localStorage.getItem('contactList'); // Récupère la liste sous forme de chaîne
+      const contactList = contactListString ? JSON.parse(contactListString) : []; // Parse pour obtenir le tableau d'objets
+
+      const tbody = document.querySelector("table tbody");
+      tbody.innerHTML = ""; // Réinitialise le tableau avant d'ajouter les contacts
+
+      // Parcours de chaque contact dans la liste
+      for (const [index, contact] of contactList.entries()) {
+        tbody.innerHTML += `
+          <tr>
+            <td>${contact.name}</td>
+            <td>${contact.firstname}</td>
+            <td>${contact.date}</td>
+            <td>${contact.adress}</td>
+            <td>${contact.mail}</td>
+            <td><button class="delete-btn" onclick="deleteContact(${index})">Supprimer</button></td>
+          </tr>`;
+      }
+    }
+
+    // Fonction pour supprimer un contact par son index
+    function deleteContact(index) {
+      const contactListString = localStorage.getItem('contactList');
+      let contactList = contactListString ? JSON.parse(contactListString) : [];
+
+      // Supprime le contact à l'index donné
+      contactList.splice(index, 1);
+
+      // Met à jour le localStorage
+      localStorage.setItem('contactList', JSON.stringify(contactList));
+
+      // Mettre à jour l'affichage de la liste après la suppression
+      displayContactList();
+    }
+
+    // Appel de displayContactList au chargement de la page
+    window.onload = function () {
+      displayContactList();
+    };
+  </script>
 </body>
 
 </html>
+
+<!-- <!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaire de Contact avec Géolocalisation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #map {
+      margin-top: 20px;
+    }
+    .char-counter {
+      display: inline-block;
+      padding: 5px;
+      background-color: #f8d7da;
+      color: red;
+      border: 1px solid red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Ajouter un contact</h2>
+    <form>
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <div class="form-group">
+        <label for="dateNaissance">Date de naissance</label>
+        <input type="date" id="dateNaissance" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <div class="form-group">
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+        <button type="button" onclick="getLocation()">GPS</button>
+      </div>
+      <div id="map">
+      </div>
+      <div class="form-group">
+        <label for="email">Mail</label>
+        <input type="email" id="email" onkeyup="calcNbChar(this.id)" required>
+        <span class="char-counter">0 car.</span>
+      </div>
+      <button type="submit">Ajouter</button>
+    </form>
+  </div>
+
+  <script src="js/form-validation.js"></script>
+  <script src="js/gps.js"></script>
+  <script>
+    // Fonction pour calculer le nombre de caractères
+    function calcNbChar(id) {
+      const length = document.getElementById(id).value.length;
+      document.querySelector(`#${id} + .char-counter`).textContent = `${length} car.`;
+    }
+  </script>
+</body>
+
+</html> -->
+
+
